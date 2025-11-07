@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post('/signup', validateRequest(AuthValidation.signupValidationSchema), AuthControllers.signupUserController)
 router.post('/login', validateRequest(AuthValidation.loginValidationSchema), AuthControllers.loginUserController)
-router.post('/change-user-info/:userName', validateRequest(AuthValidation.changeInfoValidationSchema), AuthControllers.changeUserInfoController)
+router.post('/refresh-token', validateRequest(AuthValidation.refreshTokenValidationSchema), AuthControllers.refreshTokenController)
 
 export const authRoutes = router;

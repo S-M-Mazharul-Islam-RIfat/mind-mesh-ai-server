@@ -1,7 +1,7 @@
 import { UserModel } from "./user.model"
 
-const getUserInfoByUserName = async (userName: string) => {
-   const userInfo = await UserModel.findOne({ userName });
+const getUserInfoByUserName = async (id: string) => {
+   const userInfo = await UserModel.findById(id);
    return userInfo;
 }
 

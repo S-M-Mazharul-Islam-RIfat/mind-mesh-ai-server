@@ -6,7 +6,6 @@ const signupValidationSchema = z.object({
       userName: z.string(),
       email: z.string(),
       password: z.string(),
-      confirmPassword: z.string()
    })
 })
 
@@ -17,16 +16,14 @@ const loginValidationSchema = z.object({
    })
 })
 
-const changeInfoValidationSchema = z.object({
-   body: z.object({
-      fullName: z.string().optional(),
-      email: z.string().optional(),
-      password: z.string().optional(),
+const refreshTokenValidationSchema = z.object({
+   cookies: z.object({
+      refreshToken: z.string().min(1, "Refresh token is required")
    })
 })
 
 export const AuthValidation = {
    signupValidationSchema,
    loginValidationSchema,
-   changeInfoValidationSchema
+   refreshTokenValidationSchema,
 }

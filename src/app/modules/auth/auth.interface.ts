@@ -1,11 +1,11 @@
-export interface TSignup {
-   name: string;
+export type TSignup = {
+   fullName: string;
+   userName: string;
    email: string;
    password: string;
-   confirmPassword: string;
 }
 
-export interface TLogin {
+export type TLogin = {
    email: string;
    password: string;
 }

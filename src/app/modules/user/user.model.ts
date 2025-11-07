@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt';
 import { model, Schema } from "mongoose";
 import { TUser, UserModelType } from "./user.interface";
 import config from '../../config';
-import { email } from 'zod';
 
 const userSchema = new Schema<TUser, UserModelType>({
    fullName: {
@@ -24,7 +23,8 @@ const userSchema = new Schema<TUser, UserModelType>({
       select: 0
    },
    passwordChangedAt: {
-      type: Date
+      type: Date,
+      default: Date.now()
    },
    role: {
       type: String,
@@ -35,16 +35,6 @@ const userSchema = new Schema<TUser, UserModelType>({
       type: String,
       enum: ['in-progress', 'blocked'],
       default: 'in-progress'
-   },
-   stats: {
-      threadsCreated: {
-         type: Number,
-         default: 0
-      },
-      postsAndReplies: {
-         type: Number,
-         default: 0
-      },
    },
    memberSince: {
       type: String
@@ -81,5 +71,9 @@ userSchema.statics.isPasswordMatched = async function (plainTextPassword, hashed
    return await bcrypt.compare(plainTextPassword, hashedPassword);
 }
 
+userSchema.statics.isJWTIssuedBeforePasswordChanged = async function (passwordChangedTimestamp: Date, jwtIssuedTimestamp: number) {
+   const passwordChangedTime = new Date(passwordChangedTimestamp).getTime() / 1000;
+   return (passwordChangedTime > jwtIssuedTimestamp);
+}
 
 export const UserModel = model<TUser, UserModelType>('User', userSchema);

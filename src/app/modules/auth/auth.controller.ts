@@ -33,14 +33,14 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
    })
 })
 
-const changeUserInfoController = catchAsync(async (req: Request, res: Response) => {
-   const { userName } = req.params;
-   const result = await AuthServices.changeUserInfo(userName as string, req.body);
+const refreshTokenController = catchAsync(async (req, res) => {
+   const { refreshToken } = req.cookies;
+   const result = await AuthServices.refreshToken(refreshToken);
 
    sendResponse(res, {
       statusCode: status.OK,
       success: true,
-      message: 'User info changed successfully',
+      message: 'Access token is retrived successfully',
       data: result
    })
 })
@@ -48,5 +48,5 @@ const changeUserInfoController = catchAsync(async (req: Request, res: Response) 
 export const AuthControllers = {
    signupUserController,
    loginUserController,
-   changeUserInfoController
+   refreshTokenController,
 }

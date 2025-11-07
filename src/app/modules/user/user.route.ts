@@ -3,6 +3,6 @@ import { UserControllers } from './user.controller';
 
 const router = express.Router();
 
-router.get('/:userName', UserControllers.getUserInfoByUserNameController)
+router.get('/:id', UserControllers.getUserInfoByUserNameController)
 
 export const userRoutes = router;

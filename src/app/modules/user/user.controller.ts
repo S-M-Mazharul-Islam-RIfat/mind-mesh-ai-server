@@ -5,8 +5,8 @@ import sendResponse from "../../utils/sendResponse";
 import status from "http-status";
 
 const getUserInfoByUserNameController = catchAsync(async (req: Request, res: Response) => {
-   const { userName } = req.params;
-   const result = await UserServices.getUserInfoByUserName(userName!);
+   const { id } = req.params;
+   const result = await UserServices.getUserInfoByUserName(id!);
    sendResponse(res, {
       statusCode: status.OK,
       success: true,
