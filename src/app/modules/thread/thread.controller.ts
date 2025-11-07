@@ -15,12 +15,14 @@ const createThreadController = catchAsync(async (req: Request, res: Response) =>
 })
 
 const getAllThreadController = catchAsync(async (req: Request, res: Response) => {
-   const result = await ThreadServices.getAllThread();
-   sendResponse(res, {
-      statusCode: status.OK,
+   const page = Number(req.query.page) || 1;
+   const limit = Number(req.query.limit) || 5;
+   const result = await ThreadServices.getAllThread({ page, limit });
+   res.status(200).json({
       success: true,
       message: 'All thread retrived successfully',
-      data: result,
+      data: result.threads,
+      meta: { totalPages: result.total }
    })
 })
 

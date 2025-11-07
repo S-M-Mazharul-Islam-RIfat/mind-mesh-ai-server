@@ -1,20 +1,31 @@
-import express, { Application } from "express";
-import cors from "cors";
-import router from "./app/routes";
-import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import express, { Application } from 'express';
+import morgan from 'morgan';
+import cors from 'cors';
+import router from './app/routes';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import cookieParser from 'cookie-parser';
 
 const app: Application = express();
-const cookieParser = require('cookie-parser')
 
-// parser
+// CORS
+app.use(
+   cors({
+      origin: 'http://localhost:5173',
+      credentials: true,
+   })
+);
+
+// Built-in middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
-// application routes
+// Morgan logger (colored dev mode)
+app.use(morgan('dev'));
+
+// API routes
 app.use('/api/v1', router);
 
-// global error handler
+// Global error handler
 app.use(globalErrorHandler);
 
 export default app;

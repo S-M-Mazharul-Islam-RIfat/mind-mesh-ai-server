@@ -35,10 +35,6 @@ const threadSchema = new Schema<TThread>({
       type: [String],
       required: true,
    },
-   commentsCount: {
-      type: Number,
-      default: 0
-   },
    threadUpdatedAt: {
       type: Date,
       default: Date.now

@@ -6,9 +6,20 @@ const createThread = async (payload: TThread) => {
    return res;
 }
 
-const getAllThread = async () => {
-   const res = await ThreadModel.find();
-   return res;
+const getAllThread = async (payload: { page: number, limit: number }) => {
+   const page = payload.page;
+   const limit = payload.limit;
+   const skip = (page - 1) * limit;
+
+   const threads = await ThreadModel.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+
+   const total = await ThreadModel.countDocuments();
+
+   return { threads, total };
 }
 
 const getSingleThread = async (id: string) => {

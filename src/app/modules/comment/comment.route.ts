@@ -8,5 +8,4 @@ const router = express.Router();
 router.post('/create-comment', validateRequest(CommentValidationSchema.createCommentValidationSchema), CommentControllers.createCommentController);
 router.get('/:threadId', CommentControllers.getAllCommentsByThreadIdController)
 
-
 export const commentRoutes = router; 

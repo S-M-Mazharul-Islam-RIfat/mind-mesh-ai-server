@@ -6,6 +6,7 @@ import { CommentServices } from "./comment.service";
 
 const createCommentController = catchAsync(async (req: Request, res: Response) => {
    const result = await CommentServices.createComment(req.body);
+
    sendResponse(res, {
       statusCode: status.OK,
       success: true,
@@ -17,15 +18,16 @@ const createCommentController = catchAsync(async (req: Request, res: Response) =
 const getAllCommentsByThreadIdController = catchAsync(async (req: Request, res: Response) => {
    const { threadId } = req.params;
    const result = await CommentServices.getAllCommentsByThreadId(threadId!);
-   sendResponse(res, {
-      statusCode: status.OK,
+   res.status(200).json({
       success: true,
-      message: 'Comments retrived successfully by specific thread id',
-      data: result
+      message: 'Comments retrived successfully by thread id',
+      data: result.nestedComments,
+      meta: { commentsCount: result.total }
    })
 })
 
+
 export const CommentControllers = {
    createCommentController,
-   getAllCommentsByThreadIdController
+   getAllCommentsByThreadIdController,
 }

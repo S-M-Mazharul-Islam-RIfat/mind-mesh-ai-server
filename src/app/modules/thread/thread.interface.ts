@@ -6,7 +6,6 @@ export type TThread = {
    title: string;
    threadBody: string;
    tags: string[];
-   commentsCount?: number;
    threadUpdatedAt?: Date;
    isEdited?: boolean;
    isDeleted?: boolean;

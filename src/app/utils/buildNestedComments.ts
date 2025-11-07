@@ -3,7 +3,7 @@ export const buildNestedComments = (allComments) => {
    allComments.forEach((comment) => {
       const updatedComment = {
          ...comment._doc,
-         replies: []
+         replies: [],
       }
       commentMap.set(String(updatedComment._id), updatedComment)
    });
