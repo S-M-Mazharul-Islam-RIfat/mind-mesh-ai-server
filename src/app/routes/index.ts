@@ -4,6 +4,7 @@ import { userRoutes } from "../modules/user/user.route";
 import { threadRoutes } from "../modules/thread/thread.route";
 import { commentRoutes } from "../modules/comment/comment.route";
 import { notificationRoutes } from "../modules/notification/notification.route";
+import { aiRoutes } from "../modules/ai/ai.route";
 
 const router = Router();
 const moduleRoutes = [
@@ -26,6 +27,10 @@ const moduleRoutes = [
    {
       path: '/notifications',
       route: notificationRoutes
+   },
+   {
+      path: '/ai',
+      route: aiRoutes
    }
 ]
 
