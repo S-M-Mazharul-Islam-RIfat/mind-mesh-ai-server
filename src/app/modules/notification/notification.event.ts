@@ -14,6 +14,5 @@ notificationEvents.on("completed", async ({ jobId }) => {
    const { userId, message, type, threadId } = job.data;
    const io = getIO();
 
-   console.log(`Emitting notification to user ${userId}`);
    io.to(userId).emit("notification", { userId, message, type, threadId });
 });
