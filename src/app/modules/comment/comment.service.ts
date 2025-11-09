@@ -7,7 +7,6 @@ import { CommentModel } from "./comment.model";
 import { TNotification } from "../notification/notification.interface";
 import { NotificationModel } from "../notification/notification.model";
 
-
 export const createComment = async (payload: TComment) => {
    const session = await mongoose.startSession();
    session.startTransaction();

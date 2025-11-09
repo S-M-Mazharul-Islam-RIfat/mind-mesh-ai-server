@@ -26,7 +26,6 @@ const getAllCommentsByThreadIdController = catchAsync(async (req: Request, res: 
    })
 })
 
-
 export const CommentControllers = {
    createCommentController,
    getAllCommentsByThreadIdController,

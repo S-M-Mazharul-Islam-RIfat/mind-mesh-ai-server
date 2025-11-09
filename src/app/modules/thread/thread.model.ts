@@ -37,7 +37,7 @@ const threadSchema = new Schema<TThread>({
    },
    threadUpdatedAt: {
       type: Date,
-      default: Date.now
+      default: Date.now()
    },
    isEdited: {
       type: Boolean,

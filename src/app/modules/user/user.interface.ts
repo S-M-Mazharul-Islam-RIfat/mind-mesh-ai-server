@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+import { USER_ROLE } from "./user.constant";
 
 export type TUser = {
    fullName: string;
@@ -12,8 +13,9 @@ export type TUser = {
    isDeleted: boolean;
 }
 
+export type TUserRole = keyof typeof USER_ROLE;
+
 export interface UserModelType extends Model<TUser> {
    isUserExistsByEmail(email: string): Promise<TUser>;
    isPasswordMatched(plainTextPassword: string, hashedPassword: string): Promise<boolean>;
-   isJWTIssuedBeforePasswordChanged(passwordChangedTimestamp: Date, jwtIssuedTimestamp: number): boolean;
 }

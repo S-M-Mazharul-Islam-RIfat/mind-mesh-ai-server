@@ -4,9 +4,9 @@ import { UserServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import status from "http-status";
 
-const getUserInfoByUserNameController = catchAsync(async (req: Request, res: Response) => {
+const getUserInfoByUserIdController = catchAsync(async (req: Request, res: Response) => {
    const { id } = req.params;
-   const result = await UserServices.getUserInfoByUserName(id!);
+   const result = await UserServices.getUserInfoByUserId(id!);
    sendResponse(res, {
       statusCode: status.OK,
       success: true,
@@ -16,5 +16,5 @@ const getUserInfoByUserNameController = catchAsync(async (req: Request, res: Res
 })
 
 export const UserControllers = {
-   getUserInfoByUserNameController
+   getUserInfoByUserIdController
 }

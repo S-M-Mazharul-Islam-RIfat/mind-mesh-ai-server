@@ -93,10 +93,6 @@ const refreshToken = async (token: string) => {
       throw new AppError(status.FORBIDDEN, 'This user is blocked');
    }
 
-   if (user.passwordChangedAt && UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat as number)) {
-      throw new AppError(status.UNAUTHORIZED, 'You are not authorized')
-   }
-
    // create token and sent to the client
    const jwtPayload = {
       id: String(user._id),

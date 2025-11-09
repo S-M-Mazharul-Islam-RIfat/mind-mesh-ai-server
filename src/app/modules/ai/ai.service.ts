@@ -1,6 +1,5 @@
 import openai from "../../config/openAi";
 
-
 const generateThreadSummary = async (payload: string) => {
    const res = await openai.chat.completions.create({
       model: "gpt-5-nano",
