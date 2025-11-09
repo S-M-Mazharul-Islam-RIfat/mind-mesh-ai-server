@@ -3,6 +3,7 @@ import { authRoutes } from "../modules/auth/auth.router";
 import { userRoutes } from "../modules/user/user.route";
 import { threadRoutes } from "../modules/thread/thread.route";
 import { commentRoutes } from "../modules/comment/comment.route";
+import { notificationRoutes } from "../modules/notification/notification.route";
 
 const router = Router();
 const moduleRoutes = [
@@ -21,6 +22,10 @@ const moduleRoutes = [
    {
       path: '/comments',
       route: commentRoutes
+   },
+   {
+      path: '/notifications',
+      route: notificationRoutes
    }
 ]
 

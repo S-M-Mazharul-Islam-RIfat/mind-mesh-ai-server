@@ -45,8 +45,40 @@ const refreshTokenController = catchAsync(async (req, res) => {
    })
 })
 
+const changeUserInfoController = catchAsync(async (req, res) => {
+   const result = await AuthServices.changeUserInfo(req.body);
+   const { accessToken, refreshToken } = result;
+   res.cookie('refreshToken', refreshToken, {
+      secure: config.NODE_ENV === 'production',
+      httpOnly: true
+   })
+
+   sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'User info changed successfully',
+      data: {
+         accessToken,
+      }
+   })
+})
+
+const changePasswordController = catchAsync(async (req, res) => {
+   console.log(req.body);
+   const result = await AuthServices.changePassword(req.body);
+   console.log(result);
+   sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'Password is updated succesfully!',
+      data: result,
+   });
+});
+
 export const AuthControllers = {
    signupUserController,
    loginUserController,
    refreshTokenController,
+   changeUserInfoController,
+   changePasswordController
 }

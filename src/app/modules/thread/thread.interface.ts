@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { TAuthor } from "../../interface/author";
 
 export type TThread = {
