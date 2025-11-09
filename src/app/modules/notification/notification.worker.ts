@@ -1,6 +1,7 @@
 import { Worker } from "bullmq";
 import redis from "../../config/redis";
 
+// worker
 export const notificationWorker = new Worker("notification-queue", async (job) => {
    console.log("Processing Notification Job:", job.id, job.data);
    const { userId, message, type, threadId } = job.data;
