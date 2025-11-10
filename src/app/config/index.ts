@@ -9,6 +9,7 @@ export default {
    redis_url: process.env.REDIS_URL,
    redis_host: process.env.REDIS_HOST,
    redis_port: process.env.REDIS_PORT,
+   redis_password: process.env.REDIS_PASSWORD,
    database_url: process.env.DATABASE_URL,
    bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
    jwt_access_secret: process.env.JWT_ACCESS_SECRET,
