@@ -2,8 +2,8 @@ import IORedis from 'ioredis';
 import config from '.';
 let redis: IORedis;
 
-if (process.env.REDIS_URL) {
-   redis = new IORedis(process.env.REDIS_URL, {
+if (config.redis_url) {
+   redis = new IORedis(config.redis_url, {
       maxRetriesPerRequest: null,
    });
 } else {
