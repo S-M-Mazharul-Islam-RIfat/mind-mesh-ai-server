@@ -15,7 +15,8 @@ const userSchema = new Schema<TUser, UserModelType>({
    },
    email: {
       type: String,
-      require: true
+      required: true,
+      unique: true,
    },
    password: {
       type: String,
@@ -70,6 +71,5 @@ userSchema.statics.isUserExistsByEmail = async function (email: string) {
 userSchema.statics.isPasswordMatched = async function (plainTextPassword, hashedPassword) {
    return await bcrypt.compare(plainTextPassword, hashedPassword);
 }
-
 
 export const UserModel = model<TUser, UserModelType>('User', userSchema);

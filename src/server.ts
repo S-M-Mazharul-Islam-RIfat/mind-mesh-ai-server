@@ -8,26 +8,25 @@ import { notificationEvents } from "./app/modules/notification/notification.even
 
 async function main() {
    try {
-      // Connect MongoDB
+      // connect MongoDB
       await mongoose.connect(config.database_url as string);
       console.log("Database connected successfully");
 
-      // Test Redis
+      // test Redis
       await redis.ping();
       console.log("Redis is running");
 
-      // Create HTTP server
+      // create HTTP server
       const httpServer = http.createServer(app);
 
-      // Initialize Socket.IO
+      // initialize Socket.IO
       initSocket(httpServer);
 
-      // Load notification event listener (depends on getIO)
+      // load notification event listener
       notificationEvents;
 
-
-      // Start server
-      const PORT = config.port || 5000;
+      // start server
+      const PORT = config.server_port || 5000;
       httpServer.listen(PORT, () => {
          console.log(`Mind Mesh AI running on port ${PORT}`);
       });

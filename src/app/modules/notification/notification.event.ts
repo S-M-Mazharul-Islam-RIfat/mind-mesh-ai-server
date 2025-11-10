@@ -9,7 +9,9 @@ export const notificationEvents = new QueueEvents("notification-queue", {
 
 notificationEvents.on("completed", async ({ jobId }) => {
    const job = await notificationQueue.getJob(jobId);
-   if (!job) return;
+   if (!job) {
+      return;
+   }
 
    const { userId, message, type, threadId } = job.data;
    const io = getIO();

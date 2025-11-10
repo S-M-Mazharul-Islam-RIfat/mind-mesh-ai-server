@@ -85,15 +85,18 @@ export const createComment = async (payload: TComment) => {
 };
 
 const getAllCommentsByThreadId = async (threadId: string) => {
+   const total = await CommentModel.countDocuments({ threadId });
+
    const cacheKey = `comments:${threadId}`;
    const cachedData = await getCache(cacheKey);
+   let nestedComments;
    if (cachedData) {
-      return cachedData;
+      nestedComments = cachedData;
+      return { nestedComments, total };
    }
 
    const allComments = await CommentModel.find({ threadId }).sort({ createdAt: -1 });
-   const nestedComments = buildNestedComments(allComments);
-   const total = await CommentModel.countDocuments({ threadId });
+   nestedComments = buildNestedComments(allComments);
 
    await setCache(cacheKey, nestedComments, 1200);
    return { nestedComments, total };

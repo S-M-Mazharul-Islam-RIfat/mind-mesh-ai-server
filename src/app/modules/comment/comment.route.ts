@@ -8,7 +8,6 @@ import auth from '../../middlewares/auth';
 const router = express.Router();
 
 router.post('/create-comment', auth(USER_ROLE.user), validateRequest(CommentValidationSchema.createCommentValidationSchema), CommentControllers.createCommentController);
-
 router.get('/:threadId', auth(USER_ROLE.user), CommentControllers.getAllCommentsByThreadIdController)
 
 export const commentRoutes = router; 

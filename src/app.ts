@@ -4,29 +4,30 @@ import cors from 'cors';
 import router from './app/routes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
+import config from './app/config';
 
 const app: Application = express();
 
 // CORS
 app.use(
    cors({
-      origin: 'http://localhost:5173',
+      origin: `http://localhost:${config.client_port}`,
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
    })
 );
 
-// Built-in middlewares
+// built-in middlewares
 app.use(express.json());
 app.use(cookieParser());
 
-// Morgan logger (colored dev mode)
+// Morgan logger
 app.use(morgan('dev'));
 
 // API routes
 app.use('/api/v1', router);
 
-// Global error handler
+// global error handler
 app.use(globalErrorHandler);
 
 export default app;

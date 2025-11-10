@@ -64,9 +64,7 @@ const changeUserInfoController = catchAsync(async (req, res) => {
 })
 
 const changePasswordController = catchAsync(async (req, res) => {
-   console.log(req.body);
    const result = await AuthServices.changePassword(req.body);
-   console.log(result);
    sendResponse(res, {
       statusCode: status.OK,
       success: true,

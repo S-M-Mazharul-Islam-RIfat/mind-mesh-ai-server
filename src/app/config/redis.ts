@@ -1,8 +1,9 @@
 import IORedis from 'ioredis';
+import config from '.';
 
 const redis = new IORedis({
-   host: '127.0.0.1',
-   port: 6379,
+   host: String(config.redis_host),
+   port: Number(config.redis_port),
    maxRetriesPerRequest: null,
 });
 

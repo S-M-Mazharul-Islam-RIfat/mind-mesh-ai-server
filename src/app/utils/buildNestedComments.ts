@@ -1,6 +1,6 @@
-export const buildNestedComments = (allComments) => {
+export const buildNestedComments = (allComments: any) => {
    const commentMap = new Map();
-   allComments.forEach((comment) => {
+   allComments.forEach((comment: any) => {
       const updatedComment = {
          ...comment._doc,
          replies: [],

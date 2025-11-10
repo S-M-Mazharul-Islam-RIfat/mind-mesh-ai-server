@@ -20,7 +20,6 @@ const getAllThread = async (payload: { page: number, limit: number, search: stri
    const skip = (page - 1) * limit;
    const query = payload.search ? { title: { $regex: payload.search, $options: 'i' } } : {};
 
-
    // Create a unique cache key for pagination
    const cacheKey = `threads:page=${page}:limit=${limit}:search=${payload.search || ''}`;
 

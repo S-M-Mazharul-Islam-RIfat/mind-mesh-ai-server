@@ -139,7 +139,6 @@ const changeUserInfo = async (payload) => {
       throw new AppError(status.FORBIDDEN, 'Password is not matched');
    }
 
-
    const result = await UserModel.findOneAndUpdate(
       { _id: new ObjectId(payload.id) },
       {
@@ -180,12 +179,11 @@ const changePassword = async (payload) => {
       throw new AppError(status.NOT_FOUND, 'User not found');
    }
 
-   //checking if the password is correct
-
+   // checking if the password is correct
    if (!(await UserModel.isPasswordMatched(payload.oldPassword, user?.password)))
       throw new AppError(status.FORBIDDEN, 'Password do not matched');
 
-   //hash new password
+   // hash new password
    const newHashedPassword = await bcrypt.hash(
       payload.newPassword,
       Number(config.bcrypt_salt_rounds),

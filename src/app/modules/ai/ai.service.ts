@@ -6,12 +6,10 @@ const generateThreadSummary = async (payload: string) => {
       messages: [
          {
             role: "system",
-            content: `
-        You are a helpful assistant that summarizes forum threads.
-        Always write the summary in 3-4 clear and concise lines.
-        Use natural, friendly English. Avoid repetition or over-detailing.
-        Do not use bullet points or formatting — just plain text.
-      `,
+            content:
+               `
+               You are a helpful assistant that analyzes and summarizes forum threads.Detect and flag any inappropriate or spam content if present. Then, write a concise summary of the thread in 4-5 clear and natural lines.Use friendly, human-like English without repetition or unnecessary details.Do not use bullet points or formatting — just plain text.
+               `,
          },
          {
             role: "user",
