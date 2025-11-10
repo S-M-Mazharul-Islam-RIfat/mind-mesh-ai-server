@@ -2,10 +2,8 @@ import IORedis from 'ioredis';
 import config from '.';
 
 const redis = new IORedis({
-   host: config.redis_host,
-   port: config.redis_port,
-   password: config.redis_password,
-   tls: {},
+   host: String(config.redis_host),
+   port: Number(config.redis_port),
    maxRetriesPerRequest: null,
 });
 
