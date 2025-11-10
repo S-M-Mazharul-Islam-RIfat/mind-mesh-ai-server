@@ -1,1 +1,0 @@
-{"version":3,"file":"thread.service.d.ts","sourceRoot":"","sources":["../../../../src/app/modules/thread/thread.service.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,OAAO,EAAE,MAAM,oBAAoB,CAAC;AAwD7C,eAAO,MAAM,cAAc;4BArDU,OAAO;;;;;4BAWP;QAAE,IAAI,EAAE,MAAM,CAAC;QAAC,KAAK,EAAE,MAAM,CAAC;QAAC,MAAM,EAAE,MAAM,CAAA;KAAE;0BA6BjD,MAAM;CAiBxC,CAAA"}
