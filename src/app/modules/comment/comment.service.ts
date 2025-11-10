@@ -6,8 +6,16 @@ import { TComment } from "./comment.interface";
 import { CommentModel } from "./comment.model";
 import { TNotification } from "../notification/notification.interface";
 import { NotificationModel } from "../notification/notification.model";
+import { deleteAllCache, getCache, setCache } from "../../utils/cache";
+import redis from "../../config/redis";
 
 export const createComment = async (payload: TComment) => {
+   const pattren = `comments:${payload.threadId}`;
+   const keys = await redis.keys(pattren);
+   if (keys.length > 0) {
+      deleteAllCache(keys);
+   }
+
    const session = await mongoose.startSession();
    session.startTransaction();
 
@@ -77,9 +85,17 @@ export const createComment = async (payload: TComment) => {
 };
 
 const getAllCommentsByThreadId = async (threadId: string) => {
+   const cacheKey = `comments:${threadId}`;
+   const cachedData = await getCache(cacheKey);
+   if (cachedData) {
+      return cachedData;
+   }
+
    const allComments = await CommentModel.find({ threadId }).sort({ createdAt: -1 });
    const nestedComments = buildNestedComments(allComments);
    const total = await CommentModel.countDocuments({ threadId });
+
+   await setCache(cacheKey, nestedComments, 1200);
    return { nestedComments, total };
 }
 

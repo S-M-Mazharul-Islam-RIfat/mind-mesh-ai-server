@@ -1,6 +1,6 @@
 import redis from '../config/redis';
 
-export const setCache = async (key: string, data: any, ttl = 3600) => {
+export const setCache = async (key: string, data: any, ttl = 1200) => {
    await redis.set(key, JSON.stringify(data), 'EX', ttl);
 };
 

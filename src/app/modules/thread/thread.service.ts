@@ -6,11 +6,11 @@ import { ThreadModel } from "./thread.model";
 const createThread = async (payload: TThread) => {
    const res = await ThreadModel.create(payload);
    // Invalidate all cached thread lists
-   // const pattern = 'threads:*';
-   // const keys = await redis.keys(pattern);
-   // if (keys.length > 0) {
-   //    deleteAllCache(keys);
-   // }
+   const pattern = 'threads:*';
+   const keys = await redis.keys(pattern);
+   if (keys.length > 0) {
+      deleteAllCache(keys);
+   }
    return res;
 }
 
@@ -22,13 +22,13 @@ const getAllThread = async (payload: { page: number, limit: number, search: stri
 
 
    // Create a unique cache key for pagination
-   // const cacheKey = `threads:page=${page}:limit=${limit}:search=${payload.search || ''}`;
+   const cacheKey = `threads:page=${page}:limit=${limit}:search=${payload.search || ''}`;
 
    // Try to get from cache
-   // const cached = await getCache(cacheKey);
-   // if (cached) {
-   //    return cached;
-   // }
+   const cached = await getCache(cacheKey);
+   if (cached) {
+      return cached;
+   }
 
    const threads = await ThreadModel.find(query)
       .sort({ createdAt: -1 })
@@ -39,7 +39,7 @@ const getAllThread = async (payload: { page: number, limit: number, search: stri
    const total = await ThreadModel.countDocuments(query);
    const res = { threads, total, totalPages: Math.ceil(total / limit) };
 
-   // await setCache(cacheKey, res, 3600);
+   await setCache(cacheKey, res, 1200);
 
    return res;
 }
@@ -52,7 +52,7 @@ const getSingleThread = async (id: string) => {
    }
 
    const res = await ThreadModel.findById(id);
-   await setCache(cacheKey, res, 3600);
+   await setCache(cacheKey, res, 1200);
 
    return res;
 }
