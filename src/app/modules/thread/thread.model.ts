@@ -1,26 +1,10 @@
 import { model, Schema } from "mongoose";
 import { TThread } from "./thread.interface";
-import { TAuthor } from "../../interface/author";
-
-const authorSchema = new Schema<TAuthor>({
-   id: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-   },
-   email: {
-      type: String,
-      required: [true, 'Author email is required']
-   },
-   userName: {
-      type: String,
-      required: [true, 'Author username is required']
-   }
-})
 
 const threadSchema = new Schema<TThread>({
    author: {
-      type: authorSchema,
-      required: [true, 'Author is required']
+      type: Schema.Types.ObjectId,
+      ref: 'User'
    },
    title: {
       type: String,

@@ -1,21 +1,6 @@
-import { model, Schema } from "mongoose";
+import { InferSchemaType, model, Schema } from "mongoose";
 import { TComment } from "./comment.interface";
-import { TAuthor } from "../../interface/author";
-
-const authorSchema = new Schema<TAuthor>({
-   id: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-   },
-   userName: {
-      type: String,
-      required: [true, "Author username is required"],
-   },
-   email: {
-      type: String,
-      required: [true, "Author email is required"],
-   },
-});
+import { required } from "zod/mini";
 
 const commentSchema = new Schema<TComment>({
    threadId: {
@@ -32,13 +17,19 @@ const commentSchema = new Schema<TComment>({
       required: [true, "Comment body is required"],
    },
    commentBy: {
-      type: authorSchema,
-      required: [true, "Comment author is required"],
+      type: Schema.Types.ObjectId,
+      ref: 'User'
    },
    likes: {
       type: Number,
       default: 0
    },
+   likedBy: [
+      {
+         type: Schema.Types.ObjectId,
+         ref: 'User',
+      }
+   ],
    isEdited: {
       type: Boolean,
       default: false,
@@ -53,4 +44,5 @@ const commentSchema = new Schema<TComment>({
 
 commentSchema.index({ threadId: 1 });
 
+export type Comment = InferSchemaType<typeof commentSchema>;
 export const CommentModel = model<TComment>("Comment", commentSchema);

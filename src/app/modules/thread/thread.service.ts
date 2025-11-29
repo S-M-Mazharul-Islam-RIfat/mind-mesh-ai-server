@@ -30,6 +30,7 @@ const getAllThread = async (payload: { page: number, limit: number, search: stri
    }
 
    const threads = await ThreadModel.find(query)
+      .populate('author', 'userName email')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -50,7 +51,7 @@ const getSingleThread = async (id: string) => {
       return cached;
    }
 
-   const res = await ThreadModel.findById(id);
+   const res = await ThreadModel.findById(id).populate('author', 'userName email');
    await setCache(cacheKey, res, 1200);
 
    return res;

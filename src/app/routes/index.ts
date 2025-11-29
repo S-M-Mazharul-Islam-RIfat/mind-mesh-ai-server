@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authRoutes } from "../modules/auth/auth.router";
+import { authRoutes } from "../modules/auth/auth.route";
 import { userRoutes } from "../modules/user/user.route";
 import { threadRoutes } from "../modules/thread/thread.route";
 import { commentRoutes } from "../modules/comment/comment.route";

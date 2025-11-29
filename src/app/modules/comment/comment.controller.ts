@@ -26,7 +26,35 @@ const getAllCommentsByThreadIdController = catchAsync(async (req: Request, res: 
    })
 })
 
+const addLikeInCommentController = catchAsync(async (req: Request, res: Response) => {
+   const { commentId } = req.params;
+   const { userId } = req.body;
+   const result = await CommentServices.addLikeInComment(commentId!, userId!);
+
+   sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'Like added successfully',
+      data: result
+   })
+})
+
+const removeLikeFromCommentController = catchAsync(async (req: Request, res: Response) => {
+   const { commentId } = req.params;
+   const { userId } = req.body;
+   const result = await CommentServices.removeLikeFromComment(commentId!, userId!);
+
+   sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'Like removed successfully',
+      data: result
+   })
+})
+
 export const CommentControllers = {
    createCommentController,
    getAllCommentsByThreadIdController,
+   addLikeInCommentController,
+   removeLikeFromCommentController
 }

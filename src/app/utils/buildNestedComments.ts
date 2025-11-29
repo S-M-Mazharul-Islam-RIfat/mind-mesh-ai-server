@@ -1,4 +1,7 @@
-export const buildNestedComments = (allComments: any) => {
+import { HydratedDocument } from "mongoose";
+import { Comment } from "../modules/comment/comment.model";
+
+export const buildNestedComments = (allComments: HydratedDocument<Comment>[]) => {
    const commentMap = new Map();
    allComments.forEach((comment: any) => {
       const updatedComment = {

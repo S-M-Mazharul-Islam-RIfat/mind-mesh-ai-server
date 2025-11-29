@@ -1,0 +1,46 @@
+services:
+  app:
+    build: .
+    container_name: mind-mesh-ai-server
+    restart: always
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - redis
+
+  worker:
+    build: .
+    container_name: mind-mesh-worker
+    restart: always
+    command: [ "node", "dist/app/modules/notification/notification.worker.js" ]
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - mongo
+
+  mongo:
+    image: mongo:6
+    container_name: mongo-db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7
+    container_name: redis-server
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command: [ "redis-server", "--port", "${REDIS_PORT}" ]
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mongo_data:
+  redis_data:

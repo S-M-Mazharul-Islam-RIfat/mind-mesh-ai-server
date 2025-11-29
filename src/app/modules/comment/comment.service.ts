@@ -8,6 +8,7 @@ import { TNotification } from "../notification/notification.interface";
 import { NotificationModel } from "../notification/notification.model";
 import { deleteAllCache, getCache, setCache } from "../../utils/cache";
 import redis from "../../config/redis";
+import { UserModel } from "../user/user.model";
 
 export const createComment = async (payload: TComment) => {
    const pattren = `comments:${payload.threadId}`;
@@ -35,19 +36,26 @@ export const createComment = async (payload: TComment) => {
       let shouldNotify = false;
       let replyType = "comment";
 
+      // get the comment author
+      const commentByAuthor = await UserModel.findById(payload.commentBy).session(session);
+      if (!commentByAuthor) {
+         throw new Error("Comment by author not found");
+      }
+
       if (!payload.parentId) {
          // notify thread author
-         if (thread.author.id.toString() !== payload.commentBy.id.toString()) {
-            recipientUserId = thread.author.id;
-            message = `${payload.commentBy.userName} commented on your thread.`;
+         if (thread.author.toString() !== payload.commentBy.toString()) {
+            recipientUserId = thread.author;
+            message = `${commentByAuthor?.userName} commented on your thread.`;
             shouldNotify = true;
          }
-      } else {
+      }
+      else {
          // notify parent comment author (if not same user)
          const parentComment = await CommentModel.findById(payload.parentId).session(session);
-         if (parentComment && parentComment.commentBy.id.toString() !== payload.commentBy.id.toString()) {
-            recipientUserId = parentComment.commentBy.id;
-            message = `${payload.commentBy.userName} replied to your comment.`;
+         if (parentComment && parentComment.commentBy.toString() !== payload.commentBy.toString()) {
+            recipientUserId = parentComment.commentBy;
+            message = `${commentByAuthor?.userName} replied to your comment.`;
             shouldNotify = true;
             replyType = "reply"
          }
@@ -95,14 +103,48 @@ const getAllCommentsByThreadId = async (threadId: string) => {
       return { nestedComments, total };
    }
 
-   const allComments = await CommentModel.find({ threadId }).sort({ createdAt: -1 });
+   const allComments = await CommentModel.find({ threadId }).populate('commentBy', 'userName email').sort({ createdAt: -1 });
    nestedComments = buildNestedComments(allComments);
 
    await setCache(cacheKey, nestedComments, 1200);
    return { nestedComments, total };
 }
 
+const addLikeInComment = async (commentId: string, userId: string) => {
+   const pattren = `comments:*`;
+   const keys = await redis.keys(pattren);
+   if (keys.length > 0) {
+      deleteAllCache(keys);
+   }
+   const res = await CommentModel.findByIdAndUpdate(
+      commentId,
+      {
+         $addToSet: { likedBy: userId },
+         $inc: { likes: 1 }
+      }
+   );
+   return res;
+}
+
+const removeLikeFromComment = async (commentId: string, userId: string) => {
+   const pattren = `comments:*`;
+   const keys = await redis.keys(pattren);
+   if (keys.length > 0) {
+      deleteAllCache(keys);
+   }
+   const res = await CommentModel.findByIdAndUpdate(
+      commentId,
+      {
+         $pull: { likedBy: userId },
+         $inc: { likes: -1 }
+      }
+   );
+   return res;
+}
+
 export const CommentServices = {
    createComment,
    getAllCommentsByThreadId,
+   addLikeInComment,
+   removeLikeFromComment
 }

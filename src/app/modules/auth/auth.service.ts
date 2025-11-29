@@ -8,6 +8,8 @@ import { createToken } from "./auth.utils";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { ObjectId } from "mongodb";
 import bcrypt from 'bcrypt';
+import redis from "../../config/redis";
+import { deleteAllCache } from "../../utils/cache";
 
 const signup = async (payload: TSignup) => {
    const userData: Partial<TUser> = { ...payload };
@@ -17,6 +19,18 @@ const signup = async (payload: TSignup) => {
 }
 
 const login = async (payload: TLogin) => {
+   // Invalidate all cached thread lists
+   const threadKeys = await redis.keys('threads:*');
+   if (threadKeys.length > 0) {
+      deleteAllCache(threadKeys);
+   }
+
+   // Invalidate all cached comments
+   const commentKeys = await redis.keys('comments:*');
+   if (commentKeys.length > 0) {
+      deleteAllCache(commentKeys);
+   }
+
    // checking if the user is exist
    const user = await UserModel.isUserExistsByEmail(payload?.email);
    if (!user) {
@@ -70,9 +84,21 @@ const login = async (payload: TLogin) => {
 }
 
 const refreshToken = async (token: string) => {
+   // Invalidate all cached thread lists
+   const threadKeys = await redis.keys('threads:*');
+   if (threadKeys.length > 0) {
+      deleteAllCache(threadKeys);
+   }
+
+   // Invalidate all cached comments
+   const commentKeys = await redis.keys('comments:*');
+   if (commentKeys.length > 0) {
+      deleteAllCache(commentKeys);
+   }
+
    // if the token is valid or not
    const decoded = jwt.verify(token, config.jwt_refresh_secret as string) as JwtPayload;
-   const { email, iat } = decoded;
+   const { email } = decoded;
 
    // checking if the user is exist
    const user = await UserModel.isUserExistsByEmail(email);
@@ -114,9 +140,9 @@ const refreshToken = async (token: string) => {
    };
 }
 
-const changeUserInfo = async (payload) => {
+const changeUserInfo = async (payload: Partial<TUser>) => {
    // checking if the user is exist
-   const user = await UserModel.isUserExistsByEmail(payload?.email);
+   const user = await UserModel.isUserExistsByEmail(payload?.email!);
    if (!user) {
       throw new AppError(status.NOT_FOUND, 'User not found');
    }
@@ -134,28 +160,31 @@ const changeUserInfo = async (payload) => {
    }
 
    // check if the password is correct
-   const passwordMatched = await UserModel.isPasswordMatched(payload?.password, user?.password);
+   const passwordMatched = await UserModel.isPasswordMatched(payload?.password!, user?.password);
    if (!passwordMatched) {
       throw new AppError(status.FORBIDDEN, 'Password is not matched');
    }
 
    const result = await UserModel.findOneAndUpdate(
-      { _id: new ObjectId(payload.id) },
+      { _id: new ObjectId(payload?._id) },
       {
          fullName: payload.fullName,
-         userName: payload.userName,
          email: payload.email,
       }
    );
 
+   if (!result) {
+      throw new AppError(status.NOT_FOUND, 'User not found');
+   }
+
    // create token and sent to the client
    const jwtPayload = {
-      id: result?._id,
-      fullName: result?.fullName,
-      userName: result?.userName,
-      email: result?.email,
-      role: result?.role,
-      memberSince: result?.memberSince
+      id: String(result._id),
+      fullName: result.fullName,
+      userName: result.userName,
+      email: result.email,
+      role: result.role,
+      memberSince: result.memberSince
    }
 
    const accessToken = createToken(
@@ -172,7 +201,7 @@ const changeUserInfo = async (payload) => {
    return { accessToken, refreshToken, result };
 }
 
-const changePassword = async (payload) => {
+const changePassword = async (payload: { _id: string, email: string, oldPassword: string, newPassword: string }) => {
    // checking if the user is exist
    const user = await UserModel.isUserExistsByEmail(payload?.email);
    if (!user) {
@@ -190,7 +219,7 @@ const changePassword = async (payload) => {
    );
 
    await UserModel.findOneAndUpdate(
-      { _id: new ObjectId(payload.id) },
+      { _id: new ObjectId(payload._id) },
       {
          password: newHashedPassword,
          passwordChangedAt: new Date(),

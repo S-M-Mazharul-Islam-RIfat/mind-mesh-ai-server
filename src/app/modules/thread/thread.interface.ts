@@ -1,7 +1,7 @@
-import { TAuthor } from "../../interface/author";
+import { Types } from "mongoose";
 
 export type TThread = {
-   author: TAuthor;
+   author: Types.ObjectId;
    title: string;
    threadBody: string;
    tags: string[];

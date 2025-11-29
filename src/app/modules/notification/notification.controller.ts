@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import status from "http-status";
 import { NotificationServices } from "./notification.service";
 
 const getAllNotificationByUserController = catchAsync(async (req: Request, res: Response) => {
-   const { id } = req.params;
-   const result = await NotificationServices.getAllNotificationByUser(id!);
-   sendResponse(res, {
-      statusCode: status.OK,
+   const page = Number(req.query.page) || 1;
+   const limit = Number(req.query.limit) || 5;
+   const userId = String(req.query.userId);
+   const result = await NotificationServices.getAllNotificationByUser(userId!, page!, limit!);
+   res.status(200).json({
       success: true,
-      message: 'Get all notification successfully',
-      data: result
+      message: 'All notifications retrived successfully',
+      data: result.notifications,
+      meta: { totalPages: result.totalPages, total: result.total }
    })
 })
 

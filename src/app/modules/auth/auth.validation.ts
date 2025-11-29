@@ -24,7 +24,7 @@ const refreshTokenValidationSchema = z.object({
 
 const changeUserInfoValidationSchema = z.object({
    body: z.object({
-      id: z.string(),
+      _id: z.string(),
       fullName: z.string().optional(),
       userName: z.string().optional(),
       email: z.string().optional(),
@@ -34,7 +34,7 @@ const changeUserInfoValidationSchema = z.object({
 
 const changePasswordValidationSchema = z.object({
    body: z.object({
-      id: z.string(),
+      _id: z.string(),
       email: z.string(),
       oldPassword: z.string(),
       newPassword: z.string()
